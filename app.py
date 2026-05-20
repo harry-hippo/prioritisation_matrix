@@ -45,7 +45,7 @@ if "roadmap_df" not in st.session_state:
 # --- 4. SIDEBAR: GLOBAL STRATEGY WEIGHTS ---
 with st.sidebar:
     st.header("Strategy Weighting")
-    st.info("Adjust weights to reflect this quarter's business priorities. Sliders default to the baseline framework distribution.")
+    st.info("Adjust weights to reflect priorities. Sliders default to the baseline framework distribution.")
     
     w_insight = st.slider("Insight Value (%)", 0, 50, 10)
     w_reusage = st.slider("Re-usability / Cross-Team Benefit (%)", 0, 50, 20)
