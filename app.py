@@ -192,19 +192,27 @@ st.caption("NHS App Adoption Strategy Tool v3.0 | Powered by Streamlit & Google 
 # --- 7. ADMIN CONTROLS ---
 st.divider()
 with st.expander("🛠️ Admin Controls"):
-    st.warning("This will permanently delete all projects from the Google Sheet.")
-    if st.button("Clear All Roadmap Data", type="primary"):
-        # Create an empty dataframe with your exact column headers
-        empty_df = pd.DataFrame(columns=[
-            "Timestamp", "Project", "Score", "Priority", "Context", "Effort Notes"
-        ])
-        
-        try:
-            # Overwrite the Google Sheet with the empty dataframe
-            conn.update(data=empty_df)
-            # Clear the local cached version
-            st.session_state.roadmap_df = empty_df
-            st.success("Roadmap cleared successfully!")
-            st.rerun() # Refresh the app to update the table UI
-        except Exception as e:
-            st.error(f"Failed to clear data: {e}")
+    st.info("This area is restricted. Please enter the admin password to access database controls.")
+    
+    # The type="password" argument masks the input with dots
+    pwd_input = st.text_input("Admin Password", type="password")
+    
+    if pwd_input:
+        # Check if it matches the password in secrets.toml
+        if pwd_input == st.secrets["admin_password"]:
+            st.success("Access Granted.")
+            st.warning("⚠️ DANGER: This will permanently delete all projects from the Google Sheet.")
+            
+            if st.button("Clear All Roadmap Data", type="primary"):
+                empty_df = pd.DataFrame(columns=[
+                    "Timestamp", "Project", "Score", "Priority", "Context", "Effort Notes"
+                ])
+                try:
+                    conn.update(data=empty_df)
+                    st.session_state.roadmap_df = empty_df
+                    st.success("Roadmap cleared successfully!")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Failed to clear data: {e}")
+        else:
+            st.error("Incorrect password.")
