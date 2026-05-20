@@ -152,12 +152,14 @@ else:
                 updated_df = pd.concat([existing_df, new_row], ignore_index=True)
                 
                 conn.update(data=updated_df)
+                st.cache_data.clear()  # Purge the cache so the app fetches the new row
                 st.session_state.roadmap_df = updated_df
                 
                 st.success(f"Successfully added '{project_name}' to the Roadmap Portfolio!")
-                st.balloons()
             except Exception as e:
                 st.error(f"Error saving to Google Sheets: {e}")
+
+
 
 # --- 6. LIVE PORTFOLIO LEADERBOARD VIEW ---
 st.divider()
@@ -209,6 +211,7 @@ with st.expander("🛠️ Admin Controls"):
                 ])
                 try:
                     conn.update(data=empty_df)
+                    st.cache_data.clear()  # Purge the cache so ghost data doesn't return
                     st.session_state.roadmap_df = empty_df
                     st.success("Roadmap cleared successfully!")
                     st.rerun()
